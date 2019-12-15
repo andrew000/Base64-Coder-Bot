@@ -12,7 +12,30 @@ logger = logging.getLogger(__name__)
 
 def start(update, context):
     context.bot.send_message(chat_id=update.message.chat_id,
-                             text='commands here')
+                             text="Commands:\n\n"
+                                  "BASE64_Encode: /b64e <code>some_text</code>\n"
+                                  "BASE64_Decode: /b64d <code>some_text</code>",
+                             parse_mode=ParseMode.HTML)
+
+
+def b64encode(update, context):
+    if len(update.message.text.split()) == 1:
+        update.message.reply_text("Use /b64e `some_text`", parse_mode=ParseMode.MARKDOWN)
+        return
+    string = base64.b64encode(bytes(" ".join(update.message.text.split()[1:]), 'utf8')).decode()
+    update.message.reply_text(string)
+
+
+def b64decode(update, context):
+    if len(update.message.text.split()) == 1:
+        update.message.reply_text("Use /b64d `some_text`", parse_mode=ParseMode.MARKDOWN)
+        return
+
+    try:
+        string = base64.b64decode(" ".join(update.message.text.split()[1:])).decode()
+        update.message.reply_text(string)
+    except Exception as exc:
+        update.message.reply_text(str(exc))
 
 
 def inline_query(update, context):
@@ -52,6 +75,8 @@ def main():
     dp = updater.dispatcher
 
     dp.add_handler(CommandHandler('start', start))
+    dp.add_handler(CommandHandler('b64e', b64encode))
+    dp.add_handler(CommandHandler('b64d', b64decode))
 
     dp.add_handler(InlineQueryHandler(inline_query))
 
