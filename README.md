@@ -2,9 +2,9 @@
 
 A [Telegram](https://telegram.org) Bot for Base64 Encoding/Decoding.
 
-#####Inline is available!
+##### Inline is available!
 
-#Requirements:
+# Requirements:
 * Telegram token (use [@BotFather](https://t.me/botfather) to get one)
 * Linux: <code>pip3 install -r requirements.txt</code>
 * Windows: <code>pip install -r requirements.txt</code>
