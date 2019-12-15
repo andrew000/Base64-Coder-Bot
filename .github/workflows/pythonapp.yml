@@ -27,4 +27,5 @@ jobs:
     - name: Test with pytest
       run: |
         pip install pytest
-        pytest -q main.py
+        cp main.py test_main.py
+        pytest
