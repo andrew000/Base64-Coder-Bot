@@ -45,7 +45,7 @@ def inline_query(update, context):
 
     query = update.inline_query
 
-    if query.query == '':
+    if query.query in ('', ' '):
         return
 
     results = [InlineQueryResultArticle(id=uuid.uuid4(),
