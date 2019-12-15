@@ -3,6 +3,7 @@ from telegram.ext import *
 import logging
 import base64
 import uuid
+from config import TOKEN
 
 logging.basicConfig(handlers=[logging.FileHandler('log.txt', 'w', 'utf-8')],
                     format='[*] {%(pathname)s:%(lineno)d} %(asctime)s - %(levelname)s - %(message)s',
@@ -71,7 +72,7 @@ def error(update, context):
 
 
 def main():
-    updater = Updater('932627043:AAECgjqokI0bnYAraHMcuK74vj9HoUWB-GM', use_context=True)
+    updater = Updater(TOKEN, use_context=True)  # Place your token here
     dp = updater.dispatcher
 
     dp.add_handler(CommandHandler('start', start))
