@@ -45,7 +45,7 @@ def inline_query(update, context):
 
     query = update.inline_query
 
-    if query.query in ('', ' '):
+    if query.query == '':
         return
 
     results = [InlineQueryResultArticle(id=uuid.uuid4(),
@@ -74,7 +74,7 @@ def error(update, context):
 
 
 def main():
-    updater = Updater(TOKEN, use_context=True)  # Place your token here
+    updater = Updater(TOKEN, use_context=True)  # Place your token in config.py
     dp = updater.dispatcher
 
     dp.add_handler(CommandHandler('start', start))
