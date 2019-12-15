@@ -1,8 +1,10 @@
+import base64
+import logging
+import uuid
+
 from telegram import *
 from telegram.ext import *
-import logging
-import base64
-import uuid
+
 from config import TOKEN
 
 logging.basicConfig(handlers=[logging.FileHandler('log.txt', 'w', 'utf-8')],
