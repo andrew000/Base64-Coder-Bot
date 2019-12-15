@@ -2,7 +2,7 @@
 
 A [Telegram](https://telegram.org) Bot for Base64 Encoding/Decoding.
 
-##### Inline is available!
+### Inline is available!
 
 # Requirements:
 * Telegram token (use [@BotFather](https://t.me/botfather) to get one)
