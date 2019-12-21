@@ -1,6 +1,8 @@
 import base64
 import logging
 import uuid
+import binascii
+import secrets
 
 from telegram import *
 from telegram.ext import *
@@ -42,30 +44,219 @@ def b64decode(update, context):
 
 
 def inline_query(update, context):
-
     query = update.inline_query
 
-    if query.query == '':
+    available = "b16, b32, b64, b85, crc32, uuid1, uuid3, uuid4, uuid5, bsecret, hsecret, usecret"
+
+    enter_a_text = [InlineQueryResultArticle(id=uuid.uuid4(),
+                                             title="Enter some text",
+                                             input_message_content=InputTextMessageContent("Example: b** some text"),
+                                             description="Example: b64 some text")]
+
+    if len(query.query.split()) < 1 or query.query == '':
+        make_a_choice = [InlineQueryResultArticle(id=uuid.uuid4(),
+                                                  title="Make a choice",
+                                                  input_message_content=InputTextMessageContent(
+                                                      f"Available: {available}"),
+                                                  description=f"Available: {available}")]
+        update.inline_query.answer(make_a_choice, cache_time=1, is_personal=True)
         return
 
-    results = [InlineQueryResultArticle(id=uuid.uuid4(),
-                                        title="BASE64 Encode",
-                                        input_message_content=InputTextMessageContent(base64.b64encode(bytes(query.query, 'utf8')).decode()),
-                                        description=base64.b64encode(bytes(query.query, 'utf8')).decode())]
+    if query.query.split()[0] == 'b16':
+        if len(query.query.split()) < 2:
+            update.inline_query.answer(enter_a_text, cache_time=1, is_personal=True)
+            return
+        string = " ".join(query.query.split()[1:])
+        results = [InlineQueryResultArticle(id=uuid.uuid4(),
+                                            title="BASE16 Encode",
+                                            input_message_content=InputTextMessageContent(
+                                                base64.b16encode(bytes(string, 'utf8')).decode()),
+                                            description=base64.b16encode(bytes(string, 'utf8')).decode())]
 
-    try:
-        results.append(InlineQueryResultArticle(id=uuid.uuid4(),
-                                                title="BASE64 Decode",
-                                                input_message_content=InputTextMessageContent(base64.b64decode(query.query).decode()),
-                                                description=base64.b64decode(query.query).decode()))
+        try:
+            results.append(InlineQueryResultArticle(id=uuid.uuid4(),
+                                                    title="BASE16 Decode",
+                                                    input_message_content=InputTextMessageContent(
+                                                        base64.b16decode(string).decode()),
+                                                    description=base64.b16decode(string).decode()))
 
-    except Exception as exc:
-        results.append(InlineQueryResultArticle(id=uuid.uuid4(),
-                                                title="BASE64 Decode",
-                                                input_message_content=InputTextMessageContent("Not a BASE64"),
-                                                description=str(exc)))
+        except Exception as exc:
+            results.append(InlineQueryResultArticle(id=uuid.uuid4(),
+                                                    title="BASE16 Decode",
+                                                    input_message_content=InputTextMessageContent("Not a BASE16"),
+                                                    description=str(exc)))
 
-    update.inline_query.answer(results, cache_time=1, is_personal=True)
+        update.inline_query.answer(results, cache_time=1, is_personal=True)
+
+    elif query.query.split()[0] == 'b32':
+        if len(query.query.split()) < 2:
+            update.inline_query.answer(enter_a_text, cache_time=1, is_personal=True)
+            return
+        string = " ".join(query.query.split()[1:])
+        results = [InlineQueryResultArticle(id=uuid.uuid4(),
+                                            title="BASE32 Encode",
+                                            input_message_content=InputTextMessageContent(
+                                                base64.b32encode(bytes(string, 'utf8')).decode()),
+                                            description=base64.b32encode(bytes(string, 'utf8')).decode())]
+
+        try:
+            results.append(InlineQueryResultArticle(id=uuid.uuid4(),
+                                                    title="BASE32 Decode",
+                                                    input_message_content=InputTextMessageContent(
+                                                        base64.b32decode(string).decode()),
+                                                    description=base64.b32decode(string).decode()))
+
+        except Exception as exc:
+            results.append(InlineQueryResultArticle(id=uuid.uuid4(),
+                                                    title="BASE32 Decode",
+                                                    input_message_content=InputTextMessageContent("Not a BASE32"),
+                                                    description=str(exc)))
+
+        update.inline_query.answer(results, cache_time=1, is_personal=True)
+
+    elif query.query.split()[0] == 'b64':
+        if len(query.query.split()) < 2:
+            update.inline_query.answer(enter_a_text, cache_time=1, is_personal=True)
+            return
+        string = " ".join(query.query.split()[1:])
+        results = [InlineQueryResultArticle(id=uuid.uuid4(),
+                                            title="BASE64 Encode",
+                                            input_message_content=InputTextMessageContent(
+                                                base64.b64encode(bytes(string, 'utf8')).decode()),
+                                            description=base64.b64encode(bytes(string, 'utf8')).decode())]
+
+        try:
+            results.append(InlineQueryResultArticle(id=uuid.uuid4(),
+                                                    title="BASE64 Decode",
+                                                    input_message_content=InputTextMessageContent(
+                                                        base64.b64decode(string).decode()),
+                                                    description=base64.b64decode(string).decode()))
+
+        except Exception as exc:
+            results.append(InlineQueryResultArticle(id=uuid.uuid4(),
+                                                    title="BASE64 Decode",
+                                                    input_message_content=InputTextMessageContent("Not a BASE64"),
+                                                    description=str(exc)))
+
+        update.inline_query.answer(results, cache_time=1, is_personal=True)
+
+    elif query.query.split()[0] == 'b85':
+        if len(query.query.split()) < 2:
+            update.inline_query.answer(enter_a_text, cache_time=1, is_personal=True)
+            return
+        string = " ".join(query.query.split()[1:])
+        results = [InlineQueryResultArticle(id=uuid.uuid4(),
+                                            title="BASE85 Encode",
+                                            input_message_content=InputTextMessageContent(
+                                                base64.b85encode(bytes(string, 'utf8')).decode()),
+                                            description=base64.b85encode(bytes(string, 'utf8')).decode())]
+
+        try:
+            results.append(InlineQueryResultArticle(id=uuid.uuid4(),
+                                                    title="BASE85 Decode",
+                                                    input_message_content=InputTextMessageContent(
+                                                        base64.b85decode(string).decode()),
+                                                    description=base64.b85decode(string).decode()))
+
+        except Exception as exc:
+            results.append(InlineQueryResultArticle(id=uuid.uuid4(),
+                                                    title="BASE85 Decode",
+                                                    input_message_content=InputTextMessageContent("Not a BASE85"),
+                                                    description=str(exc)))
+
+        update.inline_query.answer(results, cache_time=1, is_personal=True)
+
+    elif query.query.split()[0] == 'crc32':
+        if len(query.query.split()) < 2:
+            update.inline_query.answer(enter_a_text, cache_time=1, is_personal=True)
+            return
+        generated = f"CRC32: `{binascii.crc32(bytes(' '.join(query.query.split()[1:]), 'utf8'))}`"
+        results = [InlineQueryResultArticle(id=uuid.uuid4(),
+                                            title="CRC32",
+                                            input_message_content=InputTextMessageContent(generated, ParseMode.MARKDOWN),
+                                            description=generated)]
+
+        update.inline_query.answer(results, cache_time=1, is_personal=True)
+
+    elif query.query.split()[0] == 'uuid1':
+
+        generated = f"UUID1: `{str(uuid.uuid1())}`"
+
+        results = [InlineQueryResultArticle(id=uuid.uuid4(),
+                                            title="UUID1",
+                                            input_message_content=InputTextMessageContent(generated,
+                                                                                          ParseMode.MARKDOWN),
+                                            description=generated)]
+
+        update.inline_query.answer(results, cache_time=1, is_personal=True)
+
+    elif query.query.split()[0] == 'uuid3':
+
+        generated = f"UUID3: `{str(uuid.uuid3(uuid.uuid4(), update.inline_query.from_user.name))}`"
+
+        results = [InlineQueryResultArticle(id=uuid.uuid4(),
+                                            title="UUID3",
+                                            input_message_content=InputTextMessageContent(generated,
+                                                                                          ParseMode.MARKDOWN),
+                                            description=generated)]
+
+        update.inline_query.answer(results, cache_time=1, is_personal=True)
+
+    elif query.query.split()[0] == 'uuid4':
+        generated = f"UUID4: `{str(uuid.uuid4())}`"
+
+        results = [InlineQueryResultArticle(id=uuid.uuid4(),
+                                            title="UUID4",
+                                            input_message_content=InputTextMessageContent(generated,
+                                                                                          ParseMode.MARKDOWN),
+                                            description=generated)]
+
+        update.inline_query.answer(results, cache_time=1, is_personal=True)
+
+    elif query.query.split()[0] == 'uuid5':
+
+        generated = f"UUID5: `{str(uuid.uuid5(uuid.uuid4(), update.inline_query.from_user.name))}`"
+
+        results = [InlineQueryResultArticle(id=uuid.uuid4(),
+                                            title="UUID5",
+                                            input_message_content=InputTextMessageContent(generated,
+                                                                                          ParseMode.MARKDOWN),
+                                            description=generated)]
+
+        update.inline_query.answer(results, cache_time=1, is_personal=True)
+
+    elif query.query.split()[0] == 'hsecret':
+
+        generated = f"HEX SECRET: <code>{secrets.token_hex()}</code>"
+
+        results = [InlineQueryResultArticle(id=uuid.uuid4(),
+                                            title="Secret is to secret show this)",
+                                            input_message_content=InputTextMessageContent(generated, ParseMode.HTML))]
+
+        update.inline_query.answer(results, cache_time=1, is_personal=True)
+
+    elif query.query.split()[0] == 'bsecret':
+
+        generated = f"BYTE SECRET: <code>{secrets.token_bytes().decode('l1')}</code>"
+
+        results = [InlineQueryResultArticle(id=uuid.uuid4(),
+                                            title="Secret is to secret show this)",
+                                            input_message_content=InputTextMessageContent(generated, ParseMode.HTML))]
+
+        update.inline_query.answer(results, cache_time=1, is_personal=True)
+
+    elif query.query.split()[0] == 'usecret':
+
+        generated = f"URL SAFE SECRET: <code>{secrets.token_urlsafe()}</code>"
+
+        results = [InlineQueryResultArticle(id=uuid.uuid4(),
+                                            title="Secret is to secret show this)",
+                                            input_message_content=InputTextMessageContent(generated, ParseMode.HTML))]
+
+        update.inline_query.answer(results, cache_time=1, is_personal=True)
+
+    else:
+        return
 
 
 def error(update, context):
